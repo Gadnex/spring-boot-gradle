@@ -14,7 +14,7 @@ public class HelloController {
 
     @GetMapping(path = "{name}")
     public String sayHello(@PathVariable(name = "name") String name) {
-        log.info("name: {}", name);
+        log.info("Called sayHello with name: {}", name);
         return "Hello " + name;
     }
 }

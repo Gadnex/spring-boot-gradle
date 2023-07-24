@@ -3,7 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.1.2'
 	id 'io.spring.dependency-management' version '1.1.2'
 	id 'org.graalvm.buildtools.native' version '0.9.23'
-	id 'com.gorylenko.gradle-git-properties' version '2.4.1'
+	id 'com.gorylenko.gradle-git-properties' version '2.4.1' // For actuator info git properties
 }
 
 group = 'net.binarypaper'
@@ -23,6 +23,7 @@ repositories {
 	mavenCentral()
 }
 
+// Used to get shortened Git hash for Actuator info endpoint and docker image tag
 def gitHash = { ->
     def gitProcess = 'git rev-parse --short HEAD'.execute()
     gitProcess.waitFor()
@@ -32,6 +33,7 @@ def gitHash = { ->
 springBoot {
 	buildInfo {
 		properties {
+			// Git hash on works on docker image and not local run
 			version = "${project.version}.${gitHash}"
 			additional = [
 				"description": "Example Spring Boot project with native GraalVM image build and Git versioning info in application.",
@@ -60,6 +62,7 @@ tasks.named('test') {
 
 tasks.named('bootBuildImage') {
 	imageName = "docker.io/library/${project.name}:${project.version}.${gitHash}"
+	// docker configuration only added as my notebook is Windows with docker running inside WSL
 	docker {
 		host.set('unix:///mnt/wsl/shared-docker/docker.sock')
 		bindHostToBuilder.set(true)
