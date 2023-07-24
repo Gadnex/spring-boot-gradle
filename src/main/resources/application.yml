@@ -4,5 +4,4 @@ management:
             exposure:
                 include: "*"
     info:
-        java:
-            enabled: true
+        java.enabled: true
