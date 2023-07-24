@@ -22,6 +22,27 @@ repositories {
 	mavenCentral()
 }
 
+def gitHash = { ->
+    def gitProcess = 'git rev-parse --short HEAD'.execute()
+    gitProcess.waitFor()
+    return gitProcess.text.trim()
+}
+
+springBoot {
+	buildInfo {
+		properties {
+			version = "${project.version}.${gitHash}"
+			additional = [
+				"description": "Example Spring Boot project with native GraalVM image build and Git versioning info in application.",
+				"developer.name": "William Gadney",
+				"developer.email": "gadnex@gmail.com",
+				"license.name": "APACHE LICENSE, VERSION 2.0",
+				"license.url" : "https://www.apache.org/licenses/LICENSE-2.0"
+			]
+		}
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -37,7 +58,7 @@ tasks.named('test') {
 }
 
 tasks.named('bootBuildImage') {
-	imageName = "docker.io/library/${project.name}:${project.version}"
+	imageName = "docker.io/library/${project.name}:${project.version}.${gitHash}"
 	docker {
 		host.set('unix:///mnt/wsl/shared-docker/docker.sock')
 		bindHostToBuilder.set(true)

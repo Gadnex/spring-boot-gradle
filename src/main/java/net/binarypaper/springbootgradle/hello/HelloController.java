@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(path = "hello")
 @Slf4j
 public class HelloController {
-    
+
     @GetMapping(path = "{name}")
     public String sayHello(@PathVariable(name = "name") String name) {
         log.info("name: {}", name);
